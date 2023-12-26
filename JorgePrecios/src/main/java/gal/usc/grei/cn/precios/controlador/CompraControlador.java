@@ -1,6 +1,7 @@
 package gal.usc.grei.cn.precios.controlador;
 
 import gal.usc.grei.cn.precios.fachada.CompraFachada;
+import gal.usc.grei.cn.precios.modelo.Precio;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,14 @@ public class CompraControlador {
     public CompraControlador(CompraFachada compras){
         this.compras = compras;
     }
+
+    @GetMapping(
+            path = "{simbolo}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    ) ResponseEntity<Compra> get(@PathVariable("simbolo") String simbolo) {
+        return ResponseEntity.of(compras.get(simbolo));
+    }
+
     /**
      * Método: POST
      * Url para llegar: /compras
