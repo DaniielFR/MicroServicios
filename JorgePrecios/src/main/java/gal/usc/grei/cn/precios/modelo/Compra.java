@@ -24,6 +24,14 @@ public class Compra {
     @NotNull(message = "El precio total no puede ser vacío")
     private Float total;
 
+    private Pago pago;
+
+    public Pago getPago() {return this.pago;}
+    public Compra setPago(Pago pago) {
+        this.pago = pago;
+        return this;
+    }
+
     public String getId() {
         return id;
     }

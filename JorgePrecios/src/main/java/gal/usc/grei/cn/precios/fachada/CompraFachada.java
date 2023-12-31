@@ -12,6 +12,7 @@ import java.util.Optional;
 @Service
 public class CompraFachada {
 
+    private PagoFachada pagoProcesador;
     private CompraRepositorio compras;
     /*
     * Constructor de la clase
@@ -19,6 +20,7 @@ public class CompraFachada {
     */
     public CompraFachada(CompraRepositorio compras) {
         this.compras = compras;
+        this.pagoProcesador = new PagoFachada();
     }
     public Optional<Compra> get(String id) {
 // Se recupera la compra por el id
@@ -35,7 +37,12 @@ public class CompraFachada {
         //Comprobamos que la película haya llegado sin un id:
         if (compra.getId() == null || compra.getId().isEmpty()) {
             //Si es así, se devuelve un optional con los datos de la película insertada.
-            return Optional.of(compras.insert(compra));
+            pagoProcesador.procesarPago(compra);
+            if(compra.getPago().getEstado() == 1)
+                return Optional.of(compras.insert(compra));
+            else
+                System.out.println("PagoFallado");
+                return Optional.empty();
         }
         return Optional.empty();
     }
