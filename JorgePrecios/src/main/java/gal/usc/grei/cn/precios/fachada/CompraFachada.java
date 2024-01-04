@@ -1,18 +1,26 @@
 package gal.usc.grei.cn.precios.fachada;
 
+import gal.usc.grei.cn.precios.Configuracion.RTConfig;
+import gal.usc.grei.cn.precios.controlador.PagoControlador;
 import gal.usc.grei.cn.precios.modelo.Compra;
 import gal.usc.grei.cn.precios.repositorio.CompraRepositorio;
 import gal.usc.grei.cn.precios.repositorio.PrecioRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class CompraFachada {
 
-    private PagoFachada pagoProcesador;
+    @Autowired
+    private RestTemplate restTemplate;
+
     private CompraRepositorio compras;
     /*
     * Constructor de la clase
@@ -20,7 +28,6 @@ public class CompraFachada {
     */
     public CompraFachada(CompraRepositorio compras) {
         this.compras = compras;
-        this.pagoProcesador = new PagoFachada();
     }
     public Optional<Compra> get(String id) {
 // Se recupera la compra por el id
@@ -34,15 +41,51 @@ public class CompraFachada {
     información incorrecta.
      */
     public Optional<Compra> create(Compra compra) {
-        //Comprobamos que la película haya llegado sin un id:
+
         if (compra.getId() == null || compra.getId().isEmpty()) {
-            //Si es así, se devuelve un optional con los datos de la película insertada.
-            pagoProcesador.procesarPago(compra);
-            if(compra.getPago().getEstado() == 1)
-                return Optional.of(compras.insert(compra));
+            //Insertamos la compra en la bd
+            compra.setEstado(0);
+            Compra nCompra = compras.insert(compra);
+
+            /*
+            DESCOMENTAR SI SE QUIERE PROBAR QUE EL PATRON FUCIONA CON EL MONGO COMPASS
+            //Para probar que el patron funciona
+            try {
+                System.out.println("Paramos?");
+                TimeUnit.SECONDS.sleep(10);
+            } catch (Exception e){
+                System.out.println("Error");
+            }
+            */
+
+            //Hacemos la peticion para pago (con la contraseña contrasenha para hacerlo medio privado (se podría hacer mejor con un
+            //.java con @configuration
+            HttpHeaders cabecera = new HttpHeaders();
+            cabecera.set(
+                    "Autentificacion", "contrasenha"
+            );
+
+            HttpEntity<Compra> peticion = new HttpEntity<>(nCompra, cabecera);
+
+            System.out.println("1");
+
+            ResponseEntity<String> respuesta = restTemplate.exchange(
+                    "http://localhost:8081/pago", HttpMethod.POST, peticion, String.class
+            );
+
+            //En base a la respuesta
+
+            if(respuesta.getBody().equals("pagoRealizado")) {
+                nCompra.setEstado(1);
+                compras.save(nCompra);
+                return Optional.of(nCompra);
+            }
             else
+            {
+                compras.delete(compra);
                 System.out.println("PagoFallado");
                 return Optional.empty();
+            }
         }
         return Optional.empty();
     }

@@ -24,6 +24,25 @@ public class Compra {
     @NotNull(message = "El precio total no puede ser vacío")
     private Float total;
 
+    private int estado;
+
+    private String tarjeta;
+
+    public int getEstado() {return estado; }
+
+    public String getTarjeta() {return tarjeta;}
+
+    public Compra setEstado(int estado){
+        this.estado = estado;
+        return this;
+    }
+
+    public Compra setTarjeta(String tarjeta){
+        this.tarjeta = tarjeta;
+        return this;
+    }
+
+    /*
     private Pago pago;
 
     public Pago getPago() {return this.pago;}
@@ -31,6 +50,7 @@ public class Compra {
         this.pago = pago;
         return this;
     }
+    */
 
     public String getId() {
         return id;
