@@ -1,14 +1,18 @@
-package gal.usc.grei.cn.precios.fachada;
+package gal.usc.grei.cn.compras.fachada;
 
-import gal.usc.grei.cn.precios.modelo.Compra;
-import gal.usc.grei.cn.precios.repositorio2.CompraRepositorio;
+import gal.usc.grei.cn.compras.modelo.Compra;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
+
+import gal.usc.grei.cn.compras.repositorio.CompraRepositorio;
 
 import java.util.Optional;
 
@@ -20,10 +24,10 @@ public class CompraFachada {
 
     private CompraRepositorio compras;
     /*
-    * Constructor de la clase
-    * @param compras Referencia al CompraRepositorio
-    */
-    public CompraFachada(@Qualifier("secondaryMongoTemplate") MongoTemplate mongoTemplate, CompraRepositorio compras) {
+     * Constructor de la clase
+     * @param compras Referencia al CompraRepositorio
+     */
+    public CompraFachada(CompraRepositorio compras) {
         this.compras = compras;
     }
     public Optional<Compra> get(String id) {
@@ -67,7 +71,7 @@ public class CompraFachada {
             System.out.println("1");
 
             ResponseEntity<String> respuesta = restTemplate.exchange(
-                    "http://localhost:8081/pago", HttpMethod.POST, peticion, String.class
+                    "http://localhost:8082/pago", HttpMethod.POST, peticion, String.class
             );
 
             //En base a la respuesta

@@ -1,9 +1,7 @@
-package gal.usc.grei.cn.precios.repositorio;
+package gal.usc.grei.cn.compras.repositorio;
 
-import gal.usc.grei.cn.precios.modelo.Compra;
+import gal.usc.grei.cn.compras.modelo.Compra;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
-import java.util.Optional;
 
 public interface CompraRepositorio extends MongoRepository<Compra, String> {
 /*

@@ -3,9 +3,9 @@ Content-Type: application/json
 
 {
 "fecha": "2010-03-01",
-"simbolo": "AAAAAAAAA",
-"volumen": 40110,
+"simbolo": "Falla",
+"volumen": 100,
 "unidad": 2.2,
 "total": 220.0,
-"tarjeta": "4111111111111111"
+"tarjeta": "123"
 }

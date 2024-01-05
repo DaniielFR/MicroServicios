@@ -3,7 +3,6 @@ package gal.usc.grei.cn.precios.repositorio;
 import gal.usc.grei.cn.precios.modelo.Precio;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 import java.util.Optional;
 

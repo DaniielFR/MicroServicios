@@ -3,7 +3,7 @@ Content-Type: application/json
 
 {
 "fecha": "2010-03-01",
-"simbolo": "AAAAAAAAA",
+"simbolo": "BBBBBBBBBB",
 "volumen": 40110,
 "unidad": 2.2,
 "total": 220.0,
